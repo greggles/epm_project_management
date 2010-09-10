@@ -1,0 +1,78 @@
+<?php 
+
+// Nid
+// Last updated
+// Count of bugs - open/closed.
+// Date of last stable release
+// Count of active maintainers
+// Usage d.o for 6.x
+
+function epm_project_management_schema() {
+  $schema['epm_project_management_data'] = array(
+    'description' => 'Holds project metadata data for the epm project management system.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node} this data belongs to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'last_update' => array(
+        'description' => 'The Unix timestamp when this data was last updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'open_bug_count' => array(
+        'description' => 'The number of open bugs on this project.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'closed_bug_count' => array(
+        'description' => 'The number of closed bugs on this project.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'last_stable_release' => array(
+        'description' => 'The date of the last stable release or 0 if none exists.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'open_bug_count' => array(
+        'description' => 'The number of open bugs on this project.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'active_maintainer_count' => array(
+        'description' => 'The number of active maintainers (code committers) on this project.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'major_version_usage' => array(
+        'description' => "The usage of the module's major version according to drupal.org",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+    ),
+    'indexes' => array('last_update' => array('last_update')),
+    'primary key' => array('nid'),
+  );
+  
+  return $schema;
+}
+
+
+function epm_project_management_install() {
+  // A variable to determine which major version you care about.
+  // Used in gathering usage statistics, and maybe elsewhere.
+  variable_set('epm_project_management_major_version', '6');
+
+  // Create tables.
+  drupal_install_schema('epm_project_management');
+  
+}
