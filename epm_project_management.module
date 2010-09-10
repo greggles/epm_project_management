@@ -1,3 +1,68 @@
 <?php
 
+
+
 include_once('epm_project_management.features.inc');
+
+function epm_project_management_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  // @todolow: on validate, make sure the shortname is on d.o.
+  // On insert create a record in epm_project_management_data and scrape data for it.
+  // On load, add in some data.
+  // On view, make that data pretty.
+  
+}
+
+/**
+ * Implements hook_cron();
+ */
+function epm_project_management_cron() {
+  // Scrape data for some nodes that have not been updated recently.
+  epm_project_management_update_projects(20);
+}
+
+/**
+ * A function to update projects.
+ * @param $count
+ *   The number of nodes to update. Projects are updated from the most out of date to the newest.
+ */
+function epm_project_management_update_projects($count = 1) {
+  
+  // Get rid of records for nodes that don't exist.
+  db_query("DELETE epm FROM {epm_project_management_data} epm LEFT JOIN {node} n ON epm.nid = n.nid WHERE n.nid IS NULL");
+  
+  // Now update nodes.
+  $nodes = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {epm_project_management_data} epm ON n.nid = epm.nid WHERE n.type = 'epm_project' ORDER BY epm.last_update, n.nid ASC", 0, $count);
+  while ($nid = db_fetch_array($nodes)) {
+    epm_get_data($nid);
+  }
+}
+
+function epm_project_management_init() {
+  epm_project_management_update_projects(1);
+}
+
+function epm_get_data($nid) {
+  $node = node_load($nid);
+  if (empty($node)) {
+    // Delete it.
+  }
+  else {
+    $data['nid'] = $node->nid;
+    $data['major_version_usage'] = _epm_get_usage_data($node->field_epm_short_name[0]['value']);
+    // TODO: more of these here.
+    
+    $data['last_update'] = time();
+    // Delete the record, then insert it.
+    db_query("DELETE FROM {epm_project_management_data} WHERE nid = %d", $data['nid']);
+    drupal_write_record('epm_project_management_data', $data);
+  }
+}
+
+
+
+function _epm_get_usage_data($short_name) {
+  $version = variable_set('epm_project_management_major_version', '6');
+  // Scrape to get usage. Return it.
+  return 700;  
+}
+

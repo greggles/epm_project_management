@@ -6,9 +6,9 @@
 function epm_project_management_content_default_fields() {
   $fields = array();
 
-  // Exported field: field_emm_project_shortname
-  $fields['epm_project-field_emm_project_shortname'] = array(
-    'field_name' => 'field_emm_project_shortname',
+  // Exported field: field_epm_project_shortname
+  $fields['epm_project-field_epm_project_shortname'] = array(
+    'field_name' => 'field_epm_project_shortname',
     'type_name' => 'epm_project',
     'display_settings' => array(
       'label' => array(
@@ -52,7 +52,7 @@ function epm_project_management_content_default_fields() {
       'default_value' => array(
         '0' => array(
           'value' => '',
-          '_error_element' => 'default_value_widget][field_emm_project_shortname][0][value',
+          '_error_element' => 'default_value_widget][field_epm_project_shortname][0][value',
         ),
       ),
       'default_value_php' => NULL,
