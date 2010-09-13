@@ -70,64 +70,34 @@ function _epm_get_page($url) {
 function _epm_get_usage_data($short_name) {
   $version = variable_get('epm_project_management_major_version', '6');
   // Scrape to get usage. Return it.
+  
   $doc = _epm_get_page('http://drupal.org/project/usage/'. $short_name);
+  $qp = qp($doc, '#project-usage-project-api');
   
-  $html = qp($doc, $selector)->html();
-  
-  if ($html) {
+  if ($qp) {
     $rows = array();
-    $table = qp($html)->find('table');
 
     // First find the column we care about.
-    $thead = qp($table, 'thead');
-    $break_on_next = FALSE;
-    foreach ($thead as $th) {
-      foreach ($th->children() as $tr) {
-        $column = 1;
-        foreach ($tr->children() as $td) {
-          if ($td->text() == 'Week') {
-            $break_on_next = TRUE;
-          }
-          if ($td->text() == $version .'.x') {
-            $my_column = $column;
-          }
-          $column++;
-        }
-        // Get out of here if we found it.
-        if ($break_on_next) {
-          break;
-        }
-      }
-      // Get out of here if we found it.
-      if ($break_on_next) {
-        break;
-      }
-    }
+    // Basically, we find the one we want, and then count how many 
+    // th's are before it. This gives us a suitable offset.
+    $column_number = $qp->branch('th:text(' . $version . '.x)')->prevAll('th')->size() + 2;
+
+    $data = array();
     
     // Next find the row with usage.
-    $trs = qp($table, 'tr');
-    $limit = 0;
-    foreach ($trs as $tr) {
-      // The results are within the first two values.
-      if ($limit >= 2) break;
+    // Now we loop through the actual table.
+    foreach ($qp->find('>tbody>tr') as $row) {
+      // Get the td's and then get the value of the first column.
+      $date = $row->children('td')->eq(0)->text();
       
+      // Shift back to all of the td's, and then get the $col_num'th column.
+      $download_total = str_replace(',', '', $row->end()->eq($column_number)->text());
       
-      // Remember which column we are in.
-      $this_column = 1;
-      foreach ($tr->children() as $td) {
-        if ($td->text() == 'Week') {
-          break;
-        }
-        // This is not a week, so it must be usage.
-        if ($this_column == $my_column) {
-          $usage = str_replace(',', '', $td->text());
-        }
-        $this_column++;
-      }
-      $limit++;
+      // We only care about the first record.
+      break;
     }
   }
-    
-  return $usage; 
+      
+  return $download_total; 
 }
 
