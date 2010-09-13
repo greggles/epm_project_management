@@ -48,7 +48,10 @@ function epm_get_data($nid) {
   }
   else {
     $data['nid'] = $node->nid;
-    $data['major_version_usage'] = _epm_get_usage_data($node->field_epm_short_name[0]['value']);
+
+    // We need this.
+    require_once('QueryPath/QueryPath.php');
+    $data['major_version_usage'] = _epm_get_usage_data($node->field_epm_project_shortname[0]['value']);
     // TODO: more of these here.
     
     $data['last_update'] = time();
@@ -61,8 +64,79 @@ function epm_get_data($nid) {
 
 
 function _epm_get_usage_data($short_name) {
-  $version = variable_set('epm_project_management_major_version', '6');
+  $version = variable_get('epm_project_management_major_version', '6');
   // Scrape to get usage. Return it.
+  $doc = _epm_get_page('http://drupal.org/project/usage/'. $short_name);
+  
+  $demo = '<?xml version="1.0"?>
+  <table>
+    <tr><td>something</td><td>else</td></tr>
+    <tr><td>something2</td><td>else2</td></tr>
+  </table>
+  ';
+  $qp = qp($demo, 'tr');
+  
+  $row = 1;
+  $data = array();
+  foreach($qp as $tr) {
+    
+    foreach ($tr->children() as $child) {
+      $data[$row][] = $child->text();
+    }
+    $row++;
+  }
+  
+  $html = qp($doc, $selector)->html();
+  
+  if ($html) {
+    $rows = array();
+    $table = qp($html)->find('table');
+//    dsm($table->html());
+    // First find the column we care about.
+    $thead = qp($table, 'thead');
+    $break_on_next = FALSE;
+    foreach ($thead as $th) {
+      foreach ($th->children() as $tr) {
+        $column = 1;
+        foreach ($tr->children() as $td) {
+          if ($td->text() == 'Week') {
+            $break_on_next = TRUE;
+          }
+          if ($td->text() == $version .'.x') {
+            $my_column = $column;
+          }
+          $column++;
+        }
+        // Get out of here if we found it.
+        if ($break_on_next) {
+          break;
+        }
+      }
+      // Get out of here if we found it.
+      if ($break_on_next) {
+        break;
+      }
+    }
+    dsm($my_column);
+    
+    $trs = $table->children();
+    $limit = 0;
+    foreach ($trs->get() as $tr) {
+      if ($limit >= 4) break;
+//      $project = $children[1];
+//      $active = $children[2];
+      $rows[] = array($tr);
+      $limit++;
+    }
+  }
+  dpr($rows);
+    
   return 700;  
 }
 
+
+function _epm_get_page($url) {
+  $doc = new DomDocument();
+  @$doc->loadHTMLFile($url);
+  return $doc;
+}
