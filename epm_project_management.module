@@ -1,7 +1,6 @@
 <?php
 
 
-
 include_once('epm_project_management.features.inc');
 
 function epm_project_management_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
@@ -16,12 +15,12 @@ function epm_project_management_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  * Implements hook_cron();
  */
 function epm_project_management_cron() {
-  // Scrape data for some nodes that have not been updated recently.
+  // Scrape data for 20 nodes that have not been updated recently.
   epm_project_management_update_projects(20);
 }
 
 /**
- * A function to update projects.
+ * A function to update projects. Called by cron and perhaps could be useful via drush.
  * @param $count
  *   The number of nodes to update. Projects are updated from the most out of date to the newest.
  */
@@ -37,21 +36,26 @@ function epm_project_management_update_projects($count = 1) {
   }
 }
 
-function epm_project_management_init() {
-  epm_project_management_update_projects(1);
-}
-
+/**
+ * A function to get data for a particular nid.
+ * @param $nid
+ * @return unknown_type
+ */
 function epm_get_data($nid) {
   $node = node_load($nid);
+  
+  // Yet more data integrity checkup.
   if (empty($node)) {
     // Delete it.
+    db_query("DELETE FROM {epm_project_management_data} WHERE nid = %d", $nid);
   }
   else {
     $data['nid'] = $node->nid;
 
     // We need this.
     require_once('QueryPath/QueryPath.php');
-    $data['major_version_usage'] = _epm_get_usage_data($node->field_epm_project_shortname[0]['value']);
+    $version = variable_get('epm_project_management_major_version', '6');
+    $data['major_version_usage'] = _epm_get_usage_data($node->field_epm_project_shortname[0]['value'], $version);
     // TODO: more of these here.
     
     $data['last_update'] = time();
@@ -61,16 +65,25 @@ function epm_get_data($nid) {
   }
 }
 
+// A helper for our querypath work.
 function _epm_get_page($url) {
   $doc = new DomDocument();
   @$doc->loadHTMLFile($url);
   return $doc;
 }
 
-function _epm_get_usage_data($short_name) {
-  $version = variable_get('epm_project_management_major_version', '6');
-  // Scrape to get usage. Return it.
+
+/**
+ * Gets usage data about a project
+ * @param $short_name
+ *   A string, shortname for a project. Like 'views'.
+ * @param $version
+ *   An integer for the major version of Drupal core you care about, like "6"
+ * @return unknown_type
+ */
+function _epm_get_usage_data($short_name, $version) {
   
+  // Grab the doc and parse it.
   $doc = _epm_get_page('http://drupal.org/project/usage/'. $short_name);
   $qp = qp($doc, '#project-usage-project-api');
   
@@ -80,7 +93,7 @@ function _epm_get_usage_data($short_name) {
     // First find the column we care about.
     // Basically, we find the one we want, and then count how many 
     // th's are before it. This gives us a suitable offset.
-    $column_number = $qp->branch('th:text(' . $version . '.x)')->prevAll('th')->size() + 2;
+    $column_number = $qp->branch('th:contains(' . $version . '.x)')->prevAll('th')->size();
 
     $data = array();
     
