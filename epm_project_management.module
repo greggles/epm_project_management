@@ -61,30 +61,16 @@ function epm_get_data($nid) {
   }
 }
 
-
+function _epm_get_page($url) {
+  $doc = new DomDocument();
+  @$doc->loadHTMLFile($url);
+  return $doc;
+}
 
 function _epm_get_usage_data($short_name) {
   $version = variable_get('epm_project_management_major_version', '6');
   // Scrape to get usage. Return it.
   $doc = _epm_get_page('http://drupal.org/project/usage/'. $short_name);
-  
-  $demo = '<?xml version="1.0"?>
-  <table>
-    <tr><td>something</td><td>else</td></tr>
-    <tr><td>something2</td><td>else2</td></tr>
-  </table>
-  ';
-  $qp = qp($demo, 'tr');
-  
-  $row = 1;
-  $data = array();
-  foreach($qp as $tr) {
-    
-    foreach ($tr->children() as $child) {
-      $data[$row][] = $child->text();
-    }
-    $row++;
-  }
   
   $html = qp($doc, $selector)->html();
   
@@ -134,9 +120,3 @@ function _epm_get_usage_data($short_name) {
   return 700;  
 }
 
-
-function _epm_get_page($url) {
-  $doc = new DomDocument();
-  @$doc->loadHTMLFile($url);
-  return $doc;
-}
