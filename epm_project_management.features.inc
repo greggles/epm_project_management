@@ -11,27 +11,27 @@ $flags[] = array (
   'name' => 'epm_approved_security',
   'title' => 'Approved for security',
   'global' => '1',
-  'types' =>
+  'types' => 
   array (
     0 => 'epm_project',
   ),
-  'flag_short' => 'Not reviewed for security',
+  'flag_short' => 'Mark as reviewed for security',
   'flag_long' => 'Mark this project as reviewed for security.',
   'flag_message' => 'Thanks for performing a security review',
-  'unflag_short' => 'Reviewed for security',
+  'unflag_short' => 'Mark as not reviewed for security',
   'unflag_long' => 'Mark this project as no longer approved by security',
   'unflag_message' => 'Thanks for performing a security review',
   'unflag_denied_text' => '',
   'link_type' => 'toggle',
-  'roles' =>
+  'roles' => 
   array (
-    'flag' =>
+    'flag' => 
     array (
-      0 => 4,
+      0 => 3,
     ),
-    'unflag' =>
+    'unflag' => 
     array (
-      0 => 4,
+      0 => 3,
     ),
   ),
   'show_on_page' => 1,
@@ -40,7 +40,7 @@ $flags[] = array (
   'access_author' => '',
   'i18n' => 0,
   'module' => 'epm_project_management',
-  'locked' =>
+  'locked' => 
   array (
     0 => 'name',
   ),
@@ -52,31 +52,27 @@ $flags[] = array (
   'name' => 'epm_in_use',
   'title' => 'Project in use',
   'global' => '1',
-  'types' =>
+  'types' => 
   array (
     0 => 'epm_project',
   ),
-  'flag_short' => 'Project not in use',
+  'flag_short' => 'Mark as in use',
   'flag_long' => 'Mark project as in use',
   'flag_message' => 'Thanks for marking the project as being in use',
-  'unflag_short' => 'Project in use',
+  'unflag_short' => 'Mark as not in use',
   'unflag_long' => 'Mark project as no longer in use',
   'unflag_message' => 'Thanks for marking the project as no longer in use',
   'unflag_denied_text' => '',
   'link_type' => 'toggle',
-  'roles' =>
+  'roles' => 
   array (
-    'flag' =>
+    'flag' => 
     array (
-      0 => 2,
-      1 => 4,
-      2 => 5,
+      0 => 4,
     ),
-    'unflag' =>
+    'unflag' => 
     array (
-      0 => 2,
-      1 => 4,
-      2 => 5,
+      0 => 4,
     ),
   ),
   'show_on_page' => 1,
@@ -85,7 +81,7 @@ $flags[] = array (
   'access_author' => '',
   'i18n' => 0,
   'module' => 'epm_project_management',
-  'locked' =>
+  'locked' => 
   array (
     0 => 'name',
   ),

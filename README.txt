@@ -12,6 +12,23 @@ builders, a separate security review team, and maybe your folks are distributed
 geographically or you have high turnover/use consultants making it hard for
 everyone to stay in agreement on which modules can or can't be used.
 
+Installation
+============
+1. Place the module files in the usual place for your site (sites/all/modules)
+2. Enable the module (admin/build/modules or admin/build/features)
+3. Grant permissions for "EPM" nodes on admin/user/permissions
+4. Grant permissions for flags (some roles are included, but review them)
+5. Create some nodes (node/add/epm-project)
+6. Note how the node view page has awesome meta-data about the project
+7. Visit example.com/epm-project-list to see a list of projects
+8. Rejoice in your organized enterprise glory
+
+Optional step:
+By default the module gathers data about the 6.x version of a module. You can
+change that by setting the variable 
+
+variable_set('epm_project_management_major_version', '7');
+
 Inspiration
 ===========
 See http://growingventuresolutions.com/node/1079
