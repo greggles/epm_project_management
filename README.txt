@@ -28,7 +28,7 @@ Data is stored in a handful of tables.
 
 So, to find the ratio of open to closed bugs of projects that are "in use":
 
-SELECT n.title, open_bug_count / closed_bug_count 
+SELECT n.title, epm.field_epm_project_shortname_value, open_bug_count / closed_bug_count 
 FROM epm_project_management_data epm INNER JOIN node n on epm.nid = n.nid 
 INNER JOIN flag_content fc ON fc.content_type = 'node' AND fc.content_id = n.nid
 INNER JOIN flags f ON fc.fid = f.fid WHERE f.name = 'epm_in_use';
