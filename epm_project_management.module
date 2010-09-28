@@ -1,6 +1,5 @@
 <?php
 
-
 include_once('epm_project_management.features.inc');
 
 function epm_project_management_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
@@ -246,14 +245,5 @@ function _epm_project_management_metadata() {
     'last_stable_release' => t('Last stable release'), 
     'active_maintainer_count' => t('Active maintainers'),
     'major_version_usage' => t('Major version usage'),
-  );
-}
-
-/**
- * Implementation of hook_views_api().
- */
-function epm_project_management_views_api() {
-  return array(
-    'api' => 2,
   );
 }

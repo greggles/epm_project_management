@@ -39,12 +39,12 @@ $flags[] = array (
   'show_on_form' => 1,
   'access_author' => '',
   'i18n' => 0,
-  'api_version' => 2,
   'module' => 'epm_project_management',
   'locked' => 
   array (
     0 => 'name',
   ),
+  'api_version' => 2,
 );
 // Exported flag: "Project in use".
 $flags[] = array (
@@ -84,12 +84,12 @@ $flags[] = array (
   'show_on_form' => 1,
   'access_author' => '',
   'i18n' => 0,
-  'api_version' => 2,
   'module' => 'epm_project_management',
   'locked' => 
   array (
     0 => 'name',
   ),
+  'api_version' => 2,
 );
 return $flags;
 }
@@ -112,4 +112,13 @@ function epm_project_management_node_info() {
     ),
   );
   return $items;
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function epm_project_management_views_api() {
+  return array(
+    'api' => '2',
+  );
 }
