@@ -7,6 +7,7 @@
 // Count of active maintainers
 // Usage d.o for 6.x
 
+// Consider tracking whether this is a module or theme.
 function epm_project_management_schema() {
   $schema['epm_project_management_data'] = array(
     'description' => 'Holds project metadata data for the epm project management system.',

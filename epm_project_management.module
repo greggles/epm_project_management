@@ -248,3 +248,12 @@ function _epm_project_management_metadata() {
     'major_version_usage' => t('Major version usage'),
   );
 }
+
+/**
+ * Implementation of hook_views_api().
+ */
+function epm_project_management_views_api() {
+  return array(
+    'api' => 2,
+  );
+}
