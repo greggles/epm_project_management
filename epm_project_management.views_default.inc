@@ -474,6 +474,8 @@ function epm_project_management_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Projects');
+  $handler->override_option('empty', 'No projects on your site. If you have the right permissions, <a href="/node/add/epm-project">create some</a>.');
+  $handler->override_option('empty_format', '1');
   $handler->override_option('items_per_page', 200);
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
