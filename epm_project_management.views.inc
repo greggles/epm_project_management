@@ -1,6 +1,6 @@
 <?php
 
-/**
+ /**
  * Implementation of hook_views_data().
  */
 function epm_project_management_views_data() {
@@ -77,9 +77,9 @@ function epm_project_management_views_data() {
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
     ),
-    
-  );  
-  
+
+  );
+
   $data['epm_project_management_data']['closed_bug_count'] = array(
     'title' => t('Closed bug count'),
     'help' => t("Closed bugs for the project"),
@@ -97,7 +97,7 @@ function epm_project_management_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['epm_project_management_data']['last_stable_release'] = array(
     'title' => t('Stable, supported release date'),
     'help' => t("The date of the last stable, supported release"),
@@ -115,7 +115,7 @@ function epm_project_management_views_data() {
       'handler' => 'views_handler_argument_date',
     ),
   );
-  
+
   $data['epm_project_management_data']['active_maintainer_count'] = array(
     'title' => t('Maintainers'),
     'help' => t("Recently cctive maintainers for the project"),
@@ -133,7 +133,7 @@ function epm_project_management_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['epm_project_management_data']['major_version_usage'] = array(
     'title' => t('Usage'),
     'help' => t("Usage of the relevant major version for the project"),
@@ -151,6 +151,6 @@ function epm_project_management_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-   
+
   return $data;
 }

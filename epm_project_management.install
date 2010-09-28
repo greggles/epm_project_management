@@ -1,13 +1,11 @@
-<?php 
+<?php
 
-// Nid
-// Last updated
-// Count of bugs - open/closed.
-// Date of last stable release
-// Count of active maintainers
-// Usage d.o for 6.x
 
 // Consider tracking whether this is a module or theme.
+
+/**
+ * Implementation of hook_schema().
+ */
 function epm_project_management_schema() {
   $schema['epm_project_management_data'] = array(
     'description' => 'Holds project metadata data for the epm project management system.',
@@ -63,7 +61,7 @@ function epm_project_management_schema() {
     'indexes' => array('last_update' => array('last_update')),
     'primary key' => array('nid'),
   );
-  
+
   return $schema;
 }
 
@@ -75,5 +73,5 @@ function epm_project_management_install() {
 
   // Create tables.
   drupal_install_schema('epm_project_management');
-  
+
 }

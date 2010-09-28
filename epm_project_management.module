@@ -7,9 +7,8 @@ function epm_project_management_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   if ($node->type != 'epm_project') {
     return;
   }
-  
+
   // @todolow: on validate, make sure the shortname is on d.o.
-  
   switch ($op) {
     // On insert create a record in epm_project_management_data and scrape data for it.
     case 'insert':
@@ -22,7 +21,7 @@ function epm_project_management_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       if (empty($data)) {
         epm_retrieve_data($node->nid);
         $data = db_fetch_array(db_query_range($sql, array($node->nid), 0, 1));
-      }      
+      }
       $labels = _epm_project_management_metadata();
       foreach ($data as $key => $value) {
         if ($key == 'last_update') {
@@ -39,7 +38,7 @@ function epm_project_management_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       );
       break;
   }
-  
+
 }
 
 /**
@@ -56,10 +55,10 @@ function epm_project_management_cron() {
  *   The number of nodes to update. Projects are updated from the most out of date to the newest.
  */
 function epm_project_management_update_projects($count = 1) {
-  
+
   // Get rid of records for nodes that don't exist.
   db_query("DELETE epm FROM {epm_project_management_data} epm LEFT JOIN {node} n ON epm.nid = n.nid WHERE n.nid IS NULL");
-  
+
   // Now update nodes.
   $nodes = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {epm_project_management_data} epm ON n.nid = epm.nid WHERE n.type = 'epm_project' ORDER BY epm.last_update, n.nid ASC", 0, $count);
   while ($nid = db_fetch_array($nodes)) {
@@ -74,7 +73,7 @@ function epm_project_management_update_projects($count = 1) {
  */
 function epm_retrieve_data($nid) {
   $node = db_fetch_object(db_query("SELECT n.nid, cte.field_epm_project_shortname_value FROM {content_type_epm_project} cte INNER JOIN {node} n ON cte.vid = n.vid WHERE cte.nid = %d", $nid));
-  
+
   // Yet more data integrity checkup.
   if (empty($node)) {
     // Delete it.
@@ -85,16 +84,16 @@ function epm_retrieve_data($nid) {
 
     // We need this.
     require_once('QueryPath/QueryPath.php');
-    
+
     // Now get the version and start parsing it up.
     $version = variable_get('epm_project_management_major_version', '6');
     $data['major_version_usage'] = _epm_get_usage_data($node->field_epm_project_shortname_value, $version);
-    
+
     // Now a couple need the project page, so get it once and pass it around.
     $doc = _epm_get_page('http://drupal.org/project/'. $node->field_epm_project_shortname_value);
     list($data['open_bug_count'], $data['closed_bug_count']) = _epm_get_bug_count($doc);
     $data['last_stable_release'] = _epm_get_last_stable_release($doc, $version);
-    
+
     $too_old = variable_get('epm_project_management_inactive_maintainer_seconds', 60*60*24*120);
     $data['active_maintainer_count'] = _epm_get_active_maintainer_count($doc, $too_old);
 
@@ -122,33 +121,33 @@ function _epm_get_page($url) {
  * @return unknown_type
  */
 function _epm_get_usage_data($short_name, $version) {
-  
+
   // Grab the doc and parse it.
   $doc = _epm_get_page('http://drupal.org/project/usage/'. $short_name);
   $qp = qp($doc, '#project-usage-project-api');
-  
+
   if ($qp) {
     // First find the column we care about.
-    // Basically, we find the one we want, and then count how many 
+    // Basically, we find the one we want, and then count how many
     // th's are before it. This gives us a suitable offset.
     $column_number = $qp->branch('th:contains(' . $version . '.x)')->prevAll('th')->size();
     $data = array();
-    
+
     // Next find the row with usage.
     // Now we loop through the actual table.
     foreach ($qp->find('>tbody>tr') as $row) {
       // Get the td's and then get the value of the first column.
       $date = $row->children('td')->eq(0)->text();
-      
+
       // Shift back to all of the td's, and then get the $col_num'th column.
       $download_total = str_replace(',', '', $row->end()->eq($column_number)->text());
-      
+
       // We only care about the first record.
       break;
     }
   }
-      
-  return $download_total; 
+
+  return $download_total;
 }
 
 /**
@@ -159,8 +158,8 @@ function _epm_get_usage_data($short_name, $version) {
  */
 function _epm_get_bug_count($doc) {
   $open_bugs = $total_bugs = $closed_bugs = 0;
-  
-  // Grab the issue-cockpit piece we care about.  
+
+  // Grab the issue-cockpit piece we care about.
   $qp = qp($doc, '.issue-cockpit-bug');
   if ($qp) {
     foreach ($qp->find('a') as $row) {
@@ -168,15 +167,15 @@ function _epm_get_bug_count($doc) {
       if ($bits[1] == 'open') {
         $open_bugs = ($bits[0]);
       }
-      else if ($bits[1] == 'total') {
+      elseif ($bits[1] == 'total') {
         $total_bugs = ($bits[0]);
       }
     }
   }
-  
+
   // Math is fun. Let's not go shopping.
   $closed_bugs = $total_bugs - $open_bugs;
-  
+
   return array($open_bugs, $closed_bugs);
 }
 
@@ -191,7 +190,7 @@ function _epm_get_bug_count($doc) {
  */
 function _epm_get_last_stable_release($doc, $version) {
   $qp = qp($doc, '.view-project-release-download-table');
-  
+
   if ($qp) {
     // We've got table rows.
     foreach ($qp->find('tr') as $row) {
@@ -205,7 +204,7 @@ function _epm_get_last_stable_release($doc, $version) {
       }
     }
   }
-   
+
 }
 
 /**
@@ -217,14 +216,14 @@ function _epm_get_last_stable_release($doc, $version) {
  */
 function _epm_get_active_maintainer_count($doc, $too_old) {
   $qp = qp($doc, '#block-cvs-cvs_project_maintainers');
-  
+
   $count = 0;
-  
+
   if ($qp) {
-    foreach($qp->find('li') as $user) {
+    foreach ($qp->find('li') as $user) {
       $times = $user->branch()->find('div.cvs-commit-times')->text();
       $bits = explode(', ', $times);
-      $last = strtotime(substr($bits[0], strpos($bits[0], ':') +2));
+      $last = strtotime(drupal_substr($bits[0], strpos($bits[0], ':') +2));
       if (abs(time() - $last) < $too_old) {
         $count++;
       }
@@ -240,9 +239,9 @@ function _epm_get_active_maintainer_count($doc, $too_old) {
 function _epm_project_management_metadata() {
   return array(
     'last_update' => t('Last update'),
-    'open_bug_count' => t('Open bugs'), 
+    'open_bug_count' => t('Open bugs'),
     'closed_bug_count' => t('Closed bugs'),
-    'last_stable_release' => t('Last stable release'), 
+    'last_stable_release' => t('Last stable release'),
     'active_maintainer_count' => t('Active maintainers'),
     'major_version_usage' => t('Major version usage'),
   );

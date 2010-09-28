@@ -11,7 +11,7 @@ $flags[] = array (
   'name' => 'epm_approved_security',
   'title' => 'Approved for security',
   'global' => '1',
-  'types' => 
+  'types' =>
   array (
     0 => 'epm_project',
   ),
@@ -23,13 +23,13 @@ $flags[] = array (
   'unflag_message' => 'Thanks for performing a security review',
   'unflag_denied_text' => '',
   'link_type' => 'toggle',
-  'roles' => 
+  'roles' =>
   array (
-    'flag' => 
+    'flag' =>
     array (
       0 => 4,
     ),
-    'unflag' => 
+    'unflag' =>
     array (
       0 => 4,
     ),
@@ -40,7 +40,7 @@ $flags[] = array (
   'access_author' => '',
   'i18n' => 0,
   'module' => 'epm_project_management',
-  'locked' => 
+  'locked' =>
   array (
     0 => 'name',
   ),
@@ -52,7 +52,7 @@ $flags[] = array (
   'name' => 'epm_in_use',
   'title' => 'Project in use',
   'global' => '1',
-  'types' => 
+  'types' =>
   array (
     0 => 'epm_project',
   ),
@@ -64,15 +64,15 @@ $flags[] = array (
   'unflag_message' => 'Thanks for marking the project as no longer in use',
   'unflag_denied_text' => '',
   'link_type' => 'toggle',
-  'roles' => 
+  'roles' =>
   array (
-    'flag' => 
+    'flag' =>
     array (
       0 => 2,
       1 => 4,
       2 => 5,
     ),
-    'unflag' => 
+    'unflag' =>
     array (
       0 => 2,
       1 => 4,
@@ -85,7 +85,7 @@ $flags[] = array (
   'access_author' => '',
   'i18n' => 0,
   'module' => 'epm_project_management',
-  'locked' => 
+  'locked' =>
   array (
     0 => 'name',
   ),
