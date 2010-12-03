@@ -23,11 +23,16 @@ Installation
 7. Visit example.com/epm-project-list to see a list of projects
 8. Rejoice in your organized enterprise glory
 
-Optional step:
+Optional steps:
 By default the module gathers data about the 6.x version of a module. You can
 change that by setting the variable 
 
-variable_set('epm_project_management_major_version', '7');
+variable_set('epm_project_management_major_version', '6'); 
+
+You are also encouraged to add an exposed filter to the view at 
+/epm-project-list for the "Project purpose" vocabulary. This cannot
+be done in the module because vocabularies don't get consistent ID numbers.
+
 
 Inspiration
 ===========
