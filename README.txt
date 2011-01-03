@@ -73,6 +73,15 @@ published nodes:
 
 AND n.status = 1;
 
+Troubleshooting
+===============
+You must have allow_url_fopen enabled. If not, you may not get any data scraped 
+from drupal.org. This problem may be hidden by the use of an @ to suppress
+messages in
+  @$doc->loadHTMLFile($url);
+  
+However without that @ the parsing of files will complain loudly about every 
+unclosed tag and improper nesting which happens too often to leave enabled.
 
 Development
 ===========

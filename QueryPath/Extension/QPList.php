@@ -1,19 +1,7 @@
 <?php
-/**
- * This extension provides support for common HTML list operations.
- * @package QueryPath
- * @subpackage Extension
- */
 
-/**
- * Provide list operations for QueryPath.
- *
- * The QPList class is an extension to QueryPath. It provides HTML list generators
- * that take lists and convert them into bulleted lists inside of QueryPath.
- *
- * @deprecated This will be removed from a subsequent version of QueryPath. It will
- *  be released as a stand-alone extension.
- */ 
+
+ 
 class QPList implements QueryPathExtension {
   const UL = 'ul';
   const OL = 'ol';
@@ -49,13 +37,13 @@ class QPList implements QueryPathExtension {
       $rows = $items['rows'];
     }
     
-    // Add Headers:
+    
     foreach ($headers as $header) {
       $qp->append('<th>' . $header . '</th>');
     }
     $qp->top()->find('tr:last');
     
-    // Add rows and cells.
+    
     foreach ($rows as $row) {
       $qp->after('<tr/>')->next();
       foreach($row as $cell) $qp->append('<td>' . $cell . '</td>');
@@ -66,24 +54,7 @@ class QPList implements QueryPathExtension {
     return $this->qp;
   }
   
-  /**
-   * Append a list of items into an HTML DOM using one of the HTML list structures.
-   * This takes a one-dimensional array and converts it into an HTML UL or OL list,
-   * <b>or</b> it can take an associative array and convert that into a DL list.
-   *
-   * In addition to arrays, this works with any Traversable or Iterator object.
-   *
-   * OL/UL arrays can be nested.
-   *
-   * @param mixed $items
-   *   An indexed array for UL and OL, or an associative array for DL. Iterator and
-   *  Traversable objects can also be used.
-   * @param string $type
-   *  One of ul, ol, or dl. Predefined constants are available for use.
-   * @param array $options
-   *  An associative array of configuration options. The supported options are:
-   *  - 'list class': The class that will be assigned to a list.
-   */
+  
   public function appendList($items, $type = self::UL, $options = array()) {
     $opts = $options + array(
       'list class' => 'qplist',
@@ -103,9 +74,7 @@ class QPList implements QueryPathExtension {
     return $this->qp;
   }
   
-  /**
-   * Internal recursive list generator for appendList.
-   */
+  
   protected function listImpl($items, $type, $opts, $q = NULL) {
     $ele = '<' . $type . '/>';
     if (!isset($q))
@@ -127,44 +96,22 @@ class QPList implements QueryPathExtension {
     return $q;
   }
   
-  /**
-   * Unused.
-   */
+  
   protected function isAssoc($array) {
-    // A clever method from comment on is_array() doc page:
+    
     return count(array_diff_key($array, range(0, count($array) - 1))) != 0; 
   }
 }
 QueryPathExtensionRegistry::extend('QPList');
 
-/**
- * A TableAble object represents tabular data and can be converted to a table.
- *
- * The {@link QPList} extension to {@link QueryPath} provides a method for
- * appending a table to a DOM ({@link QPList::appendTable()}).
- *
- * Implementing classes should provide methods for getting headers, rows
- * of data, and the number of rows in the table ({@link TableAble::size()}).
- * Implementors may also choose to make classes Iterable or Traversable over
- * the rows of the table.
- *
- * Two very basic implementations of TableAble are provided in this package:
- *  - {@link QPTableData} provides a generic implementation.
- *  - {@link QPTableTextData} provides a generic implementation that also escapes
- *    all data.
- */
+
 interface TableAble {
   public function getHeaders();
   public function getRows();
   public function size();
 }
 
-/**
- * Format data to be inserted into a simple HTML table.
- *
- * Data in the headers or rows may contain markup. If you want to 
- * disallow markup, use a {@see QPTableTextData} object instead.
- */
+
 class QPTableData implements TableAble, IteratorAggregate {
   
   protected $headers;
@@ -182,14 +129,7 @@ class QPTableData implements TableAble, IteratorAggregate {
   }
 }
 
-/**
- * Provides a table where all of the headers and data are treated as text data.
- * 
- * This provents marked-up data from being inserted into the DOM as elements. 
- * Instead, the text is escaped using {@see htmlentities()}.
- *
- * @see QPTableData
- */
+
 class QPTableTextData extends QPTableData {
   public function setHeaders($array) {
     $headers = array();

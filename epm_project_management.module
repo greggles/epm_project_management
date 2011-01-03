@@ -10,7 +10,8 @@ function epm_project_management_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 
   // @todolow: on validate, make sure the shortname is on d.o.
   switch ($op) {
-    // On insert create a record in epm_project_management_data and scrape data for it.
+    // On insert and update create a record in epm_project_management_data and scrape data for it.
+    case 'update':
     case 'insert':
       epm_retrieve_data($node->nid);
       break;
@@ -124,7 +125,7 @@ function _epm_get_usage_data($short_name, $version) {
 
   // Grab the doc and parse it.
   $doc = _epm_get_page('http://drupal.org/project/usage/'. $short_name);
-  $qp = qp($doc, '#project-usage-project-api');
+  $qp = htmlqp($doc, '#project-usage-project-api');
 
   if ($qp) {
     // First find the column we care about.
@@ -160,7 +161,7 @@ function _epm_get_bug_count($doc) {
   $open_bugs = $total_bugs = $closed_bugs = 0;
 
   // Grab the issue-cockpit piece we care about.
-  $qp = qp($doc, '.issue-cockpit-bug');
+  $qp = htmlqp($doc, '.issue-cockpit-bug');
   if ($qp) {
     foreach ($qp->find('a') as $row) {
       $bits = explode(' ', $row->text());
@@ -189,7 +190,7 @@ function _epm_get_bug_count($doc) {
  *   integer A unix timestamp for the date of the release.
  */
 function _epm_get_last_stable_release($doc, $version) {
-  $qp = qp($doc, '.view-project-release-download-table');
+  $qp = htmlqp($doc, '.view-project-release-download-table');
 
   if ($qp) {
     // We've got table rows.
@@ -215,7 +216,7 @@ function _epm_get_last_stable_release($doc, $version) {
  *   integer A count of "active maintainers".
  */
 function _epm_get_active_maintainer_count($doc, $too_old) {
-  $qp = qp($doc, '#block-cvs-cvs_project_maintainers');
+  $qp = htmlqp($doc, '#block-cvs-cvs_project_maintainers');
 
   $count = 0;
 
