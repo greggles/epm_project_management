@@ -36,7 +36,7 @@ be done in the module because vocabularies don't get consistent ID numbers.
 
 Inspiration
 ===========
-See http://growingventuresolutions.com/node/1079
+See http://growingventuresolutions.knaddison.com/blog/drupal-module-selection-enterprise-lists-and-processes.html
 
 Data Structure
 ==============
@@ -85,7 +85,7 @@ unclosed tag and improper nesting which happens too often to leave enabled.
 
 Development
 ===========
-Greg Knaddison of Growing Venture Solutions http://growvs.com
+Greg Knaddison of [Growing Venture Solutions](http://growingventuresolutions.knaddison.com/)
 Tell me how much you love the module @greggles on Twitter.
 Tell me about problems or ideas in the issue queue (ideally with patches!)
 
